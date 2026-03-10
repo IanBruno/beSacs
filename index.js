@@ -14,7 +14,7 @@ import os from 'os';
 const app = express(); 
 
 // Connect MONGODB
-connectDB();
+//connectDB();
 
 //HOST name
 
@@ -29,7 +29,7 @@ const connectSQLDB = async () => {
   }
 };
 
-connectSQLDB();
+//connectSQLDB();
 
 
 
@@ -59,6 +59,31 @@ app.use((req, res) =>{
     statusCode:404
   });
 })
+
+async function runQuery(query) {
+    try {
+        await sql.connect(configMSSQL);
+        const result = await sql.query(query);
+        console.log('RESULT: ', result);
+        return result.recordset;
+    } catch (err) {
+        console.error('Database query error: ', err);
+        throw err;
+    } finally {
+        // Ensure the connection is closed after the request is finished
+        sql.close();
+    }
+}
+
+// Define a route to fetch data
+app.get('/data', async (req, res) => {
+    try {
+        const students = await runQuery('SELECT * FROM dbo.COBRO'); // Replace 'Student' with your table name
+        res.json(students);
+    } catch (err) {
+        res.status(500).send('Error fetching data');
+    }
+});
  
 
 //Start server
