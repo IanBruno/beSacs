@@ -9,12 +9,15 @@ import authRoutes from './routes/authRoutes.js';
 import sql from 'mssql';
 import configMSSQL from './config/dbMSSQL.js';
 import os from 'os';
+import { setServers } from 'node:dns/promises';
+import reportQueries from './queries/reports.js';
 
 // Initialize express App 
 const app = express(); 
+setServers(['1.1.1.1','8.8.8.8']);
 
 // Connect MONGODB
-//connectDB();
+connectDB();
 
 //HOST name
 
@@ -48,6 +51,17 @@ app.use(express.urlencoded({ extended: true}));
 
 //Routes
 app.use('/api/auth', authRoutes)
+app.get('api/reports/getfirst', async (req, res) => {
+    try {
+        const query = reportQueries.getFirstReport;
+        const { startDate, endDate } = req.body;
+        const result = await runQuery(query); // Replace 'Student' with your table name
+        res.json(result);
+    } catch (err) {
+      console.log('Query Error: ', err);
+        res.status(500).send('Error fetching data');
+    }
+});
 app.use(errorHandler)
 
 
@@ -64,7 +78,6 @@ async function runQuery(query) {
     try {
         await sql.connect(configMSSQL);
         const result = await sql.query(query);
-        console.log('RESULT: ', result);
         return result.recordset;
     } catch (err) {
         console.error('Database query error: ', err);
@@ -76,14 +89,7 @@ async function runQuery(query) {
 }
 
 // Define a route to fetch data
-app.get('/data', async (req, res) => {
-    try {
-        const students = await runQuery('SELECT * FROM dbo.COBRO'); // Replace 'Student' with your table name
-        res.json(students);
-    } catch (err) {
-        res.status(500).send('Error fetching data');
-    }
-});
+
  
 
 //Start server
