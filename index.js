@@ -14,6 +14,7 @@ import reportQueries from './queries/reports.js';
 
 // Initialize express App 
 const app = express(); 
+app.set('trust proxy', true);
 setServers(['1.1.1.1','8.8.8.8']);
 
 // Connect MONGODB
@@ -51,12 +52,13 @@ app.use(express.urlencoded({ extended: true}));
 
 //Routes
 app.use('/api/auth', authRoutes)
-app.get('api/reports/getfirst', async (req, res) => {
+app.get('/api/reports/getfirst', async (req, res) => {
     try {
-        const query = reportQueries.getFirstReport;
-        const { startDate, endDate } = req.body;
-        const result = await runQuery(query); // Replace 'Student' with your table name
-        res.json(result);
+      //console.log('lets try');
+      const query = reportQueries.getFirstReport;
+      //const { startDate, endDate } = req.body;
+      const result = await runQuery(query);
+      res.json(result);
     } catch (err) {
       console.log('Query Error: ', err);
         res.status(500).send('Error fetching data');
