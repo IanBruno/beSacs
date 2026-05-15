@@ -10,7 +10,12 @@ const reportQueries = {
         'from COBRO as C\, tarifas as T '+
         'where T.IDTarifa = c.ID_TARIFA '+
         'and c.TIPO_COBRO in (1\,2\,3\,4\,5\,6) '+ 
-        'and Fecha >= \'20200201000000\' and Fecha <= \'20260227235959\''
+        'and Fecha >= \'@fromDate\' and Fecha <= \'@toDate\'',
+    getGeneratedTickets : '',
+    getPensions: '',
+    getVouchers: '',
+    getIncomeByTickets: ' ',
+    getIncomeByPensions: '' 
 };
 
 export default reportQueries;

@@ -52,11 +52,12 @@ app.use(express.urlencoded({ extended: true}));
 
 //Routes
 app.use('/api/auth', authRoutes)
-app.get('/api/reports/getfirst', async (req, res) => {
+app.get('/api/reports/getReport', async (req, res) => {
     try {
-      //console.log('lets try');
-      const query = reportQueries.getFirstReport;
-      //const { startDate, endDate } = req.body;
+      const fromDate = req.query.fromDate;
+      const toDate = req.query.toDate;
+      const reportType = req.query.reportType;
+      const query = reportQueries?.getFirstReport?.replace('@fromDate', fromDate)?.replace('@toDate', toDate);
       const result = await runQuery(query);
       res.json(result);
     } catch (err) {
