@@ -52,12 +52,12 @@ app.use(express.urlencoded({ extended: true}));
 
 //Routes
 app.use('/api/auth', authRoutes)
-app.get('/api/reports/getReport', async (req, res) => {
+app.get('/api/reports/:index', async (req, res) => {
     try {
       const fromDate = req.query.fromDate;
       const toDate = req.query.toDate;
-      const reportType = req.query.reportType;
-      const query = reportQueries?.getFirstReport?.replace('@fromDate', fromDate)?.replace('@toDate', toDate);
+      const reportIndex = req.params.index;
+      const query = reportQueries[index]?.query?.replace('@fromDate', fromDate)?.replace('@toDate', toDate);
       const result = await runQuery(query);
       res.json(result);
     } catch (err) {
@@ -65,6 +65,7 @@ app.get('/api/reports/getReport', async (req, res) => {
         res.status(500).send('Error fetching data');
     }
 });
+
 app.use(errorHandler)
 
 
