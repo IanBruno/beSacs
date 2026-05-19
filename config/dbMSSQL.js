@@ -1,10 +1,10 @@
 const configMSSQL = {
-    server: '192.168.1.100',
+    server: '192.168.1.145',
     database: 'genesis',
     authentication: {
         options: {
-            userName: 'bruno',
-            password: 'bruno'
+            userName: 'GenConsulta',
+            password: 'gone123'
         }
     },
     options: {

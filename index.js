@@ -57,7 +57,7 @@ app.get('/api/reports/:index', async (req, res) => {
       const fromDate = req.query.fromDate;
       const toDate = req.query.toDate;
       const reportIndex = req.params.index;
-      const query = reportQueries[index]?.query?.replace('@fromDate', fromDate)?.replace('@toDate', toDate);
+      const query = reportQueries[reportIndex]?.query?.replace('@fromDate', fromDate)?.replace('@toDate', toDate);
       const result = await runQuery(query);
       res.json(result);
     } catch (err) {
