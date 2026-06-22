@@ -98,4 +98,35 @@ const reportQueries = [
     }
 ];
 
+const generalQuery = [
+    {
+        name : 'generalReport',
+        query : `select 'BOLETOS' Concepto, substring(c.fecha,1,6) Mes,
+            sum(C.Importe + ISNULL(Tiempo_DTO, 0)) Ingreso
+            from COBRO as C
+            where c.TIPO_COBRO in (1,2,3,4,5,6)
+            and substring(c.fecha,1,6) = '@year@month' /* Condicion de Fecha/Mes */
+            group by substring(c.fecha,1,6)
+
+            /* GENERAL Vales */
+            Union
+
+            select 'VALES' Concepto, substring(Fecha,1,6) Mes,
+            sum(costo * Numero) Ingreso
+            from VentaVales
+            where substring(Fecha,1,6) = '@year@month' /* Condicion de Fecha/Mes */
+            group by substring(Fecha,1,6)
+
+            /* GENERAL PENSIONES */
+            Union
+
+            select 'PENSIONES' Concepto, substring(p.FechaPago,1,6) Mes,
+            sum(p.Monto) Ingreso
+            from PagoPensionTransferencias p
+            where substring(p.FechaPago,1,6) = '@year@month' /* Condicion de Fecha/Mes */
+            group by substring(p.FechaPago,1,6)
+            `
+    }
+]
+
 export default reportQueries;
