@@ -10,7 +10,7 @@ import sql from 'mssql';
 import configMSSQL from './config/dbMSSQL.js';
 import os from 'os';
 import { setServers } from 'node:dns/promises';
-import reportQueries from './queries/reports.js';
+import {reportQueries, generalQuery}  from './queries/reports.js';
 
 // Initialize express App 
 const app = express(); 
@@ -57,7 +57,12 @@ app.get('/api/reports/:index', async (req, res) => {
       const fromDate = req.query.fromDate;
       const toDate = req.query.toDate;
       const reportIndex = req.params.index;
-      const query = reportQueries[reportIndex]?.query?.replace('@fromDate', fromDate)?.replace('@toDate', toDate);
+      let query = '';
+      if (reportIndex == 3){
+        query = generalQuery[0]?.query?.replaceAll('@year@month', '202605');
+      } else {
+        query = reportQueries[reportIndex]?.query?.replace('@fromDate', fromDate)?.replace('@toDate', toDate);
+      }
       const result = await runQuery(query);
       res.json(result);
     } catch (err) {

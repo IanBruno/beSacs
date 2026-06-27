@@ -129,4 +129,4 @@ const generalQuery = [
     }
 ]
 
-export default reportQueries;
+export {reportQueries, generalQuery};
